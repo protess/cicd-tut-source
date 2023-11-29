@@ -20,8 +20,7 @@ defaults:
     # Define the working directory for all run steps in the workflow
     working-directory: ./web
 
-jobs:
-  permissions: write-all
+jobs
   # ======================================================
   # Deploy the main branch to development
   # 
@@ -32,7 +31,7 @@ jobs:
     environment: development
     name: 'Deploy to development'
     runs-on: ubuntu-latest
-
+    permissions: write-all
     steps:
       - uses: actions/checkout@v2
         name: 'Checkout repository'

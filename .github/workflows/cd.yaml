@@ -30,6 +30,7 @@ jobs:
   deploy_development:
     environment: development
     name: 'Deploy to development'
+    # set job-level output and pass the value of step-level output to it
     outputs: 
       image-tags: ${{ steps.meta.outputs.tags }}
     runs-on: ubuntu-latest
@@ -75,19 +76,20 @@ jobs:
     needs: deploy_development
     
     steps:
-    
+      # clone gitops repo
     - name: Checkout gitops-tutorial
       uses: actions/checkout@v4
       with:
         repository: protess/gitops-tutorial
         token: ${{ secrets.GH_PAT }}
         path: gitops-tutorial
-
+      # update image tag in manifest
     - name: Update image tag
       uses: mikefarah/yq@master
       with:
         cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "${{ needs.deploy_development.outputs.image-tags }}"' gitops-tutorial/cd/gitops-tutorial.yaml
 
+      # commit change to gitops
     - name: gitops git commit
       uses: stefanzweifel/git-auto-commit-action@v5
       with:

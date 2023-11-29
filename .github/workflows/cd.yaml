@@ -31,6 +31,7 @@ jobs:
     environment: development
     name: 'Deploy to development'
     runs-on: ubuntu-latest
+    # added permissions to fix package write error
     permissions: write-all
     steps:
       - uses: actions/checkout@v2
@@ -65,28 +66,21 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
 
-    # build, tag and upload container image
-
-    # update gitops with container image tag
-
-  # ======================================================
-  # Deploy the main branch to staging
-  # 
-  # This job will require the `deploy_staging` job to
-  # run and complete successfully first!
-  # 
-  # WARNING: this job will sync all the files that are 
-  # in the folder ./web/ to the staging server 
-  # while removing all the files that are already 
-  # in the staging server!
-  # ======================================================
-  deploy_staging:
-    environment: staging
-    name: 'Deploy to staging'
+  gitops_update:
+    name: 'Update gitops repo with new tag'
     runs-on: ubuntu-latest
     needs: deploy_development
     
     steps:
     
-    - uses: actions/checkout@v2
-      name: 'Checkout repository'
+    - name: Checkout gitops-tutorial
+      uses: actions/checkout@v4
+      with:
+        repository: protess/gitops-tutorial
+        token: ${{ secrets.GH_PAT }}
+        path: gitops-tutorial
+
+    - name: Update image tag
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ steps.meta.outputs.tags }}"' ./gitops-tutorial.yaml

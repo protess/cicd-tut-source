@@ -20,7 +20,7 @@ defaults:
     # Define the working directory for all run steps in the workflow
     working-directory: ./web
 
-jobs
+jobs:
   # ======================================================
   # Deploy the main branch to development
   # 

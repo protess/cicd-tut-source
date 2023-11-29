@@ -21,6 +21,7 @@ defaults:
     working-directory: ./web
 
 jobs:
+  permissions: write-all
   # ======================================================
   # Deploy the main branch to development
   # 

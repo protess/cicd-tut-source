@@ -88,12 +88,12 @@ jobs:
     - name: Update image tag
       uses: mikefarah/yq@master
       with:
-        cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ needs.deploy_development.outputs.tags }}"' gitops-tutorial/cd/gitops-tutorial.yaml
+        cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ needs.deploy_development.outputs.image-tags }}"' gitops-tutorial/cd/gitops-tutorial.yaml
 
     - name: gitops git commit
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         repository: gitops-tutorial
-        commit_message: "Release to development ghcr.io/protess/cicd-tut-source:${{ needs.deploy_development.outputs.tags }}"
+        commit_message: "Release to development ghcr.io/protess/cicd-tut-source:${{ needs.deploy_development.outputs.image-tags }}"
         commit_user_name: protess
         commit_user_email: protess@gmail.com

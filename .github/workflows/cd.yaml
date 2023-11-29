@@ -83,4 +83,4 @@ jobs:
     - name: Update image tag
       uses: mikefarah/yq@master
       with:
-        cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ steps.meta.outputs.tags }}"' ./gitops-tutorial.yaml
+        cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ steps.meta.outputs.tags }}"' gitops-tutorial/cd/gitops-tutorial.yaml

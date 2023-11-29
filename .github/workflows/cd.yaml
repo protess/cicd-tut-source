@@ -84,3 +84,11 @@ jobs:
       uses: mikefarah/yq@master
       with:
         cmd: yq e -i '(.spec | select(.template).template.spec.containers[] | select(.name == "gitops-tutorial").image) |= "ghcr.io/protess/cicd-tut-source:${{ steps.meta.outputs.tags }}"' gitops-tutorial/cd/gitops-tutorial.yaml
+
+    - name: gitops git commit
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        repository: gitops-tutorial
+        commit_message: "Release to development ghcr.io/protess/cicd-tut-source:${{ steps.meta.outputs.tags }}"
+        commit_user_name: protess
+        commit_user_email: protess@gmail.com
